@@ -1,1 +1,1 @@
-https://polydactyl-thought-089.notion.site/Linux-Kernel-Compilation-and-Addling-a-Custom-System-Call-d34071fdb054466e84ae4ef212209406
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.10.117.tar.xz
