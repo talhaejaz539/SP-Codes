@@ -1,1 +1,70 @@
-https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.10.117.tar.xz
+sudo apt install gcc make bc build-essential libelf-dev libssl-dev bison flex initramfs-tools git-core libncurses5-dev dwarves zstd
+
+tar xvf linux-5.x.x.tar.xz
+cd linux-5.x.x.tar.xz
+
+cp /boot/config-5.13.0-40-generic ./.config
+
+yes '' | make oldconfig
+
+make kernelrelease
+
+make -j $(nproc) bzImage
+make -j $(nproc) modules
+
+sudo make INSTALL_MOD_STRIP=1 modules_install
+
+sudo make install
+
+sudo update-grub2
+
+sudo systemctl reboot
+
+// Add a System Call
+
+mkdir my_syscall # create this directory inside linux source root directory
+cd my_syscall
+touch hello_world.c
+
+#include <linux/kernel.h>
+#include <linux/syscalls.h>
+
+SYSCALL_DEFINE0(hello_world) 
+{
+	printk("Hello Ali. This is me, your custom system call.\n");
+  // printk will print to the kernel log. do see man page for more details
+	return 0;
+}
+
+vim Makefile
+
+obj-y := hello_world.o
+
+vim include/linux/syscalls.h
+
+asmlinkage long sys_hello_world (void);
+
+vim arch/x86/entry/syscalls/syscall_64.tbl
+
+core-y          += kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ my_syscall/
+
+make –j $(nproc)
+sudo make install
+
+sudo systemctl reboot
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+
+int
+main(){
+        long rv = syscall(696); // 696 is my system call's number
+        if(rv == -1){ // it means no system call found with provided syacll number
+                printf("error\n");
+                return -1;
+        }
+        return 0;
+}
+
+
