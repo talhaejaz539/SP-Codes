@@ -1,5 +1,7 @@
 sudo apt install gcc make bc build-essential libelf-dev libssl-dev bison flex initramfs-tools git-core libncurses5-dev dwarves zstd
 
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.10.117.tar.xz
+
 tar xvf linux-5.x.x.tar.xz
 cd linux-5.x.x.tar.xz
 
